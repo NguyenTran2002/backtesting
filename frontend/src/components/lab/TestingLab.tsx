@@ -139,7 +139,7 @@ export function TestingLab() {
             <label className="form-label">Request URL</label>
             <div className="code-block">
               <pre>
-                <span style={{ color: 'var(--color-amber-base)' }}>
+                <span style={{ color: 'var(--color-accent-base)' }}>
                   {currentEndpoint?.method}
                 </span>{' '}
                 {getFullUrl()}
@@ -208,7 +208,7 @@ export function TestingLab() {
             <div style={{
               textAlign: 'center',
               padding: 'var(--space-10)',
-              color: 'var(--color-amber-base)'
+              color: 'var(--color-accent-base)'
             }}>
               <p style={{
                 fontSize: '2rem',

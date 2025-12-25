@@ -101,7 +101,7 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 // Provider component
 export function AppProvider({ children }: { children: React.ReactNode }) {
   const [state, dispatch] = useReducer(appReducer, initialState);
-  const pollingTimeouts = useRef<Map<ServiceName, NodeJS.Timeout>>(new Map());
+  const pollingTimeouts = useRef<Map<ServiceName, ReturnType<typeof setTimeout>>>(new Map());
 
   // Check a single service and its endpoints
   const checkService = useCallback(async (service: ServiceName) => {

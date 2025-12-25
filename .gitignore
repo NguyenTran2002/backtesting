@@ -108,3 +108,12 @@ logs/
 
 # pyenv
 .python-version
+
+# Node.js / Frontend
+node_modules/
+dist/
+.npm
+.eslintcache
+*.tsbuildinfo
+.env.local
+.env.*.local

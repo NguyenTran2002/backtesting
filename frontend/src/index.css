@@ -1,47 +1,53 @@
 /* ==========================================================================
    Backtesting Platform - Service Dashboard
-   Aesthetic: Mission Control / Vintage Terminal with Modern Polish
+   Aesthetic: Corporate Earthy / Clean & Professional
    ========================================================================== */
 
 :root {
-  /* Core palette - Amber/Gold terminal aesthetic */
-  --color-bg-deep: #0a0a0c;
-  --color-bg-base: #0f0f12;
-  --color-bg-surface: #16161a;
-  --color-bg-elevated: #1c1c21;
-  --color-bg-hover: #24242a;
+  /* Light Mode - Warm, earthy tones */
 
-  /* Amber accent spectrum */
-  --color-amber-dim: #4a3f2a;
-  --color-amber-muted: #8b7355;
-  --color-amber-base: #d4a84b;
-  --color-amber-bright: #f0c866;
-  --color-amber-glow: #ffd980;
+  /* Background hierarchy */
+  --color-bg-deep: #F5F4F0;
+  --color-bg-base: #FAFAF8;
+  --color-bg-surface: #FFFFFF;
+  --color-bg-elevated: #FFFFFF;
+  --color-bg-hover: #F0EEE8;
 
-  /* Status colors */
-  --color-success: #4ade80;
-  --color-success-dim: #166534;
-  --color-warning: #fbbf24;
-  --color-warning-dim: #78350f;
-  --color-error: #f87171;
-  --color-error-dim: #7f1d1d;
-  --color-info: #60a5fa;
-  --color-info-dim: #1e3a5f;
+  /* Primary accent - Forest green */
+  --color-accent-dim: #D4DED4;
+  --color-accent-muted: #8FA88F;
+  --color-accent-base: #5E7A5E;
+  --color-accent-bright: #4A6B4A;
+  --color-accent-text: #FFFFFF;
+
+  /* Status colors - Earthy but clear */
+  --color-success: #5A9A6A;
+  --color-success-dim: #E8F2EA;
+  --color-success-text: #3D6B4A;
+  --color-warning: #C9A256;
+  --color-warning-dim: #FDF6E8;
+  --color-warning-text: #8B6F2A;
+  --color-error: #B85C5C;
+  --color-error-dim: #FAEAEA;
+  --color-error-text: #8B3D3D;
+  --color-info: #6B8FAD;
+  --color-info-dim: #EBF1F5;
+  --color-info-text: #4A6B85;
 
   /* Text hierarchy */
-  --color-text-primary: #e8e6e3;
-  --color-text-secondary: #9ca3af;
-  --color-text-muted: #6b7280;
-  --color-text-disabled: #4b5563;
+  --color-text-primary: #2D2D2A;
+  --color-text-secondary: #5C5C56;
+  --color-text-muted: #8A8A82;
+  --color-text-disabled: #B5B5AD;
 
   /* Borders and dividers */
-  --color-border: #2a2a30;
-  --color-border-subtle: #1f1f24;
-  --color-border-accent: var(--color-amber-dim);
+  --color-border: #E5E3DD;
+  --color-border-subtle: #EDEBE5;
+  --color-border-accent: var(--color-accent-dim);
 
-  /* Typography */
-  --font-display: 'Space Grotesk', system-ui, sans-serif;
-  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+  /* Typography - Professional system fonts */
+  --font-display: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'SF Mono', SFMono-Regular, ui-monospace, Menlo, Consolas, monospace;
 
   /* Spacing scale */
   --space-1: 0.25rem;
@@ -55,27 +61,79 @@
   --space-12: 3rem;
   --space-16: 4rem;
 
-  /* Border radius */
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
-  --radius-xl: 16px;
+  /* Border radius - Slightly sharper for corporate feel */
+  --radius-sm: 3px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
 
-  /* Shadows */
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
-  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
-  --shadow-glow-amber: 0 0 20px rgba(212, 168, 75, 0.15);
-  --shadow-glow-success: 0 0 20px rgba(74, 222, 128, 0.15);
-  --shadow-glow-error: 0 0 20px rgba(248, 113, 113, 0.15);
+  /* Shadows - Subtle, no glow */
+  --shadow-sm: 0 1px 2px rgba(45, 45, 42, 0.06);
+  --shadow-md: 0 2px 8px rgba(45, 45, 42, 0.08);
+  --shadow-lg: 0 4px 16px rgba(45, 45, 42, 0.1);
 
   /* Transitions */
   --transition-fast: 150ms ease;
-  --transition-base: 250ms ease;
-  --transition-slow: 400ms ease;
+  --transition-base: 200ms ease;
+  --transition-slow: 300ms ease;
 }
 
-/* Reset */
+/* ==========================================================================
+   Dark Mode - Automatic detection
+   ========================================================================== */
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Background hierarchy - Warm charcoals */
+    --color-bg-deep: #1A1918;
+    --color-bg-base: #222120;
+    --color-bg-surface: #2A2927;
+    --color-bg-elevated: #333230;
+    --color-bg-hover: #3A3836;
+
+    /* Primary accent - Lighter forest green for dark mode */
+    --color-accent-dim: #3D4A3D;
+    --color-accent-muted: #5E7A5E;
+    --color-accent-base: #7D9B7D;
+    --color-accent-bright: #96B296;
+    --color-accent-text: #1A1918;
+
+    /* Status colors - Same hues, adjusted for dark bg */
+    --color-success: #6AAD7A;
+    --color-success-dim: #2D3D30;
+    --color-success-text: #6AAD7A;
+    --color-warning: #D4B366;
+    --color-warning-dim: #3D3525;
+    --color-warning-text: #D4B366;
+    --color-error: #C87070;
+    --color-error-dim: #3D2828;
+    --color-error-text: #C87070;
+    --color-info: #7DA3BD;
+    --color-info-dim: #283540;
+    --color-info-text: #7DA3BD;
+
+    /* Text hierarchy */
+    --color-text-primary: #E8E6E3;
+    --color-text-secondary: #B5B3AD;
+    --color-text-muted: #858580;
+    --color-text-disabled: #5C5C56;
+
+    /* Borders and dividers */
+    --color-border: #3A3836;
+    --color-border-subtle: #333230;
+    --color-border-accent: var(--color-accent-dim);
+
+    /* Shadows - Darker for dark mode */
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
+    --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.25);
+    --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.3);
+  }
+}
+
+/* ==========================================================================
+   Reset
+   ========================================================================== */
+
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -122,19 +180,19 @@ code, pre, .mono {
 
 /* Links */
 a {
-  color: var(--color-amber-base);
+  color: var(--color-accent-base);
   text-decoration: none;
   transition: color var(--transition-fast);
 }
 
 a:hover {
-  color: var(--color-amber-bright);
+  color: var(--color-accent-bright);
 }
 
 /* Selection */
 ::selection {
-  background: var(--color-amber-dim);
-  color: var(--color-amber-glow);
+  background: var(--color-accent-dim);
+  color: var(--color-text-primary);
 }
 
 /* ==========================================================================
@@ -160,13 +218,12 @@ a:hover {
    ========================================================================== */
 
 .header {
-  background: var(--color-bg-base);
+  background: var(--color-bg-surface);
   border-bottom: 1px solid var(--color-border);
   padding: var(--space-4) var(--space-8);
   position: sticky;
   top: 0;
   z-index: 100;
-  backdrop-filter: blur(12px);
 }
 
 .header-content {
@@ -186,20 +243,20 @@ a:hover {
 .header-logo {
   width: 32px;
   height: 32px;
-  background: linear-gradient(135deg, var(--color-amber-base), var(--color-amber-dim));
+  background: var(--color-accent-base);
   border-radius: var(--radius-sm);
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 700;
   font-size: 14px;
-  color: var(--color-bg-deep);
+  color: var(--color-accent-text);
 }
 
 .header-title {
   font-size: 1.125rem;
   font-weight: 600;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
 }
 
 .header-subtitle {
@@ -233,9 +290,9 @@ a:hover {
 }
 
 .nav-tab.active {
-  color: var(--color-amber-base);
+  color: var(--color-accent-base);
   background: var(--color-bg-elevated);
-  border-color: var(--color-border-accent);
+  border-color: var(--color-border);
 }
 
 .header-status {
@@ -258,16 +315,10 @@ a:hover {
   height: 8px;
   border-radius: 50%;
   background: var(--color-success);
-  animation: pulse 2s infinite;
 }
 
 .status-dot.polling {
-  background: var(--color-amber-base);
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
+  background: var(--color-warning);
 }
 
 /* ==========================================================================
@@ -310,26 +361,26 @@ a:hover {
 }
 
 .service-card:hover {
-  border-color: var(--color-border-accent);
-  box-shadow: var(--shadow-glow-amber);
+  border-color: var(--color-accent-muted);
+  box-shadow: var(--shadow-md);
 }
 
 .service-card.healthy {
-  border-color: var(--color-success-dim);
+  border-color: var(--color-success);
 }
 
 .service-card.healthy:hover {
-  box-shadow: var(--shadow-glow-success);
+  box-shadow: var(--shadow-md);
 }
 
 .service-card.disconnected,
 .service-card.unhealthy {
-  border-color: var(--color-error-dim);
+  border-color: var(--color-error);
 }
 
 .service-card.disconnected:hover,
 .service-card.unhealthy:hover {
-  box-shadow: var(--shadow-glow-error);
+  box-shadow: var(--shadow-md);
 }
 
 .service-card-header {
@@ -363,7 +414,7 @@ a:hover {
   align-items: center;
   gap: var(--space-2);
   padding: var(--space-1) var(--space-3);
-  border-radius: 9999px;
+  border-radius: var(--radius-md);
   font-size: 0.75rem;
   font-weight: 500;
   font-family: var(--font-mono);
@@ -371,17 +422,17 @@ a:hover {
 
 .service-status-badge.healthy {
   background: var(--color-success-dim);
-  color: var(--color-success);
+  color: var(--color-success-text);
 }
 
 .service-status-badge.unhealthy {
   background: var(--color-warning-dim);
-  color: var(--color-warning);
+  color: var(--color-warning-text);
 }
 
 .service-status-badge.disconnected {
   background: var(--color-error-dim);
-  color: var(--color-error);
+  color: var(--color-error-text);
 }
 
 .service-status-badge.checking,
@@ -395,11 +446,6 @@ a:hover {
   height: 6px;
   border-radius: 50%;
   background: currentColor;
-}
-
-.service-status-badge.checking .status-icon,
-.service-status-badge.healthy .status-icon {
-  animation: pulse 1.5s infinite;
 }
 
 .service-card-body {
@@ -425,7 +471,7 @@ a:hover {
 
 .endpoint-row:hover {
   border-color: var(--color-border);
-  background: var(--color-bg-elevated);
+  background: var(--color-bg-hover);
 }
 
 .endpoint-info {
@@ -445,9 +491,10 @@ a:hover {
   font-size: 0.6875rem;
   padding: 2px 6px;
   border-radius: var(--radius-sm);
-  background: var(--color-amber-dim);
-  color: var(--color-amber-bright);
+  background: var(--color-accent-dim);
+  color: var(--color-accent-base);
   margin-right: var(--space-2);
+  font-weight: 500;
 }
 
 .endpoint-description {
@@ -473,22 +520,22 @@ a:hover {
 
 .endpoint-status-icon.working {
   background: var(--color-success-dim);
-  color: var(--color-success);
+  color: var(--color-success-text);
 }
 
 .endpoint-status-icon.missing {
   background: var(--color-error-dim);
-  color: var(--color-error);
+  color: var(--color-error-text);
 }
 
 .endpoint-status-icon.error {
   background: var(--color-error-dim);
-  color: var(--color-error);
+  color: var(--color-error-text);
 }
 
 .endpoint-status-icon.wrong-format {
   background: var(--color-warning-dim);
-  color: var(--color-warning);
+  color: var(--color-warning-text);
 }
 
 .endpoint-status-icon.checking {
@@ -543,7 +590,7 @@ a:hover {
 
 .progress-fill {
   height: 100%;
-  background: var(--color-amber-base);
+  background: var(--color-accent-base);
   border-radius: 2px;
   transition: width var(--transition-base);
 }
@@ -575,8 +622,8 @@ a:hover {
 }
 
 .refresh-btn:hover {
-  color: var(--color-amber-base);
-  border-color: var(--color-amber-dim);
+  color: var(--color-accent-base);
+  border-color: var(--color-accent-muted);
   background: var(--color-bg-hover);
 }
 
@@ -600,7 +647,7 @@ a:hover {
 .endpoint-error-text {
   font-family: var(--font-mono);
   font-size: 0.75rem;
-  color: var(--color-error);
+  color: var(--color-error-text);
   word-break: break-word;
 }
 
@@ -678,8 +725,8 @@ a:hover {
 .form-select:focus,
 .form-input:focus {
   outline: none;
-  border-color: var(--color-amber-base);
-  box-shadow: 0 0 0 3px var(--color-amber-dim);
+  border-color: var(--color-accent-base);
+  box-shadow: 0 0 0 2px var(--color-accent-dim);
 }
 
 .form-select option {
@@ -703,7 +750,8 @@ a:hover {
 
 .form-textarea:focus {
   outline: none;
-  border-color: var(--color-amber-base);
+  border-color: var(--color-accent-base);
+  box-shadow: 0 0 0 2px var(--color-accent-dim);
 }
 
 /* Buttons */
@@ -723,16 +771,16 @@ a:hover {
 }
 
 .btn-primary {
-  background: var(--color-amber-base);
-  color: var(--color-bg-deep);
+  background: var(--color-accent-base);
+  color: var(--color-accent-text);
 }
 
 .btn-primary:hover {
-  background: var(--color-amber-bright);
+  background: var(--color-accent-bright);
 }
 
 .btn-primary:disabled {
-  background: var(--color-amber-dim);
+  background: var(--color-accent-dim);
   color: var(--color-text-muted);
   cursor: not-allowed;
 }
@@ -745,7 +793,7 @@ a:hover {
 
 .btn-secondary:hover {
   color: var(--color-text-primary);
-  border-color: var(--color-amber-dim);
+  border-color: var(--color-accent-muted);
 }
 
 /* Code display */
@@ -784,7 +832,7 @@ a:hover {
   align-items: center;
   gap: var(--space-2);
   padding: var(--space-1) var(--space-3);
-  border-radius: 9999px;
+  border-radius: var(--radius-md);
   font-family: var(--font-mono);
   font-size: 0.75rem;
   font-weight: 500;
@@ -792,12 +840,12 @@ a:hover {
 
 .response-status.success {
   background: var(--color-success-dim);
-  color: var(--color-success);
+  color: var(--color-success-text);
 }
 
 .response-status.error {
   background: var(--color-error-dim);
-  color: var(--color-error);
+  color: var(--color-error-text);
 }
 
 .response-time {
@@ -807,24 +855,24 @@ a:hover {
 }
 
 /* ==========================================================================
-   Animations
+   Animations - Minimal and subtle
    ========================================================================== */
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
+  from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 .animate-fade-in {
-  animation: fadeIn 0.4s ease forwards;
+  animation: fadeIn 0.3s ease forwards;
 }
 
-.animate-delay-1 { animation-delay: 0.1s; opacity: 0; }
-.animate-delay-2 { animation-delay: 0.2s; opacity: 0; }
-.animate-delay-3 { animation-delay: 0.3s; opacity: 0; }
-.animate-delay-4 { animation-delay: 0.4s; opacity: 0; }
-.animate-delay-5 { animation-delay: 0.5s; opacity: 0; }
-.animate-delay-6 { animation-delay: 0.6s; opacity: 0; }
+.animate-delay-1 { animation-delay: 0.05s; opacity: 0; }
+.animate-delay-2 { animation-delay: 0.1s; opacity: 0; }
+.animate-delay-3 { animation-delay: 0.15s; opacity: 0; }
+.animate-delay-4 { animation-delay: 0.2s; opacity: 0; }
+.animate-delay-5 { animation-delay: 0.25s; opacity: 0; }
+.animate-delay-6 { animation-delay: 0.3s; opacity: 0; }
 
 /* ==========================================================================
    Utilities

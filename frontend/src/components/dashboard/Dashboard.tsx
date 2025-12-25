@@ -33,7 +33,7 @@ export function Dashboard() {
             style={{
               background: 'none',
               border: 'none',
-              color: 'var(--color-amber-base)',
+              color: 'var(--color-accent-base)',
               cursor: 'pointer',
               textDecoration: 'underline',
               fontFamily: 'inherit',
