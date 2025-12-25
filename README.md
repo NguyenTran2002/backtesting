@@ -149,16 +149,22 @@ backtesting/
 
 ## Git Workflow
 
+### Before You Start
+
+1. Create a new branch with your name: `git checkout -b yourname`
+2. Switch to your branch before making any changes
+3. Only work within the designated folders for your assigned services
+
 ### Commits
 
 - Write clear, descriptive commit messages
 - Keep commits focused on single changes
 - Reference issue numbers if applicable
+- **NEVER commit to branch `main`** - always work on your own branch
 
 ### Branches
 
-- Create feature branches from `main`
-- Use descriptive branch names: `feature/market-data-prices`, `fix/portfolio-dividend-calc`
+- Use descriptive branch names: `yourname`, `yourname/market-data`, etc.
 - Keep PRs focused and reviewable
 
 ---
