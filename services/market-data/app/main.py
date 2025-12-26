@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from app.routes import prices, dividends, search
 
 app = FastAPI(
     title="Market Data Service",
@@ -15,6 +16,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Registering the routers for price and dividend endpoints
+app.include_router(prices.router, tags=["Prices"])
+app.include_router(dividends.router, tags=["Dividends"])
+app.include_router(search.router, tags=["Search"])
 
 @app.get("/health")
 async def health_check():
