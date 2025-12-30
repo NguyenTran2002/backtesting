@@ -185,16 +185,18 @@ See `services/test-data-fetcher/app/main.py` - it already implements similar fun
 ```
 services/market-data/
 ├── app/
-│   ├── main.py           # Add routes
-│   ├── routes/           # Create this folder
+│   ├── main.py           # Register routes and CORS config
+│   ├── routes/           # API route definitions
+│   │   ├── __init__.py    # Route aggregation
 │   │   ├── prices.py     # /prices endpoint
-│   │   └── dividends.py  # /dividends endpoint
-│   ├── providers/        # Create this folder
-│   │   ├── base.py       # Abstract provider interface (optional)
+│   │   ├── dividends.py  # /dividends endpoint
+│   │   └── search.py     # /tickers/search endpoint
+│   ├── providers/        # Logic for yfinance data fetching
+│   │   ├── base.py       # Abstract provider interface
 │   │   └── yahoo.py      # yfinance implementation
-│   └── schemas/          # Create this folder
-│       └── models.py     # Pydantic models
-└── requirements.txt      # yfinance is already included
+│   └── schemas/          # Pydantic models
+│       └── models.py     # Request/Response schemas
+└── requirements.txt      # Ensure yfinance>=0.2.31 for stability
 ```
 
 ---
