@@ -9,17 +9,11 @@ The Orchestrator is the **API gateway** for the backtesting platform. It receive
 
 ---
 
-## Your Task
-
-Implement the following endpoints. The service skeleton already exists with a working `/health` endpoint.
-
----
-
-## Endpoints to Implement
+## Endpoints
 
 ### 1. `POST /api/backtest`
 
-This is the main endpoint. It orchestrates the entire backtest flow.
+Executes a complete backtest by orchestrating all downstream services.
 
 **Request Body:**
 
@@ -49,9 +43,20 @@ This is the main endpoint. It orchestrates the entire backtest flow.
   "baseline_params": {
     "initial_capital": 50000,
     "reinvest_dividends": true
-  }
+  },
+  "use_test_data": false
 }
 ```
+
+**Parameters:**
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `market_params` | object | Yes | Ticker and date range configuration |
+| `strategy_params` | object | Yes | Strategy type and configuration |
+| `portfolio_params` | object | Yes | Capital and trading rules for active strategy |
+| `baseline_params` | object | Yes | Capital settings for buy-and-hold baseline |
+| `use_test_data` | boolean | No | When `true`, uses test-data-fetcher instead of live market data. Default: `false` |
 
 **Response Body:**
 
@@ -67,30 +72,40 @@ This is the main endpoint. It orchestrates the entire backtest flow.
       "execution_time_ms": 1234
     },
     "active_strategy": {
-      "summary": { ... },
-      "time_series": { ... },
-      "trades": [ ... ]
+      "signals": [...],
+      "portfolio": {
+        "time_series": {...},
+        "trades": [...],
+        "final_state": {...}
+      },
+      "metrics": {...}
     },
-    "baseline_strategy": {
-      "summary": { ... },
-      "time_series": { ... }
+    "baseline": {
+      "portfolio": {
+        "time_series": {...},
+        "final_state": {...}
+      },
+      "metrics": {...}
+    },
+    "market_data": {
+      "ticker": "TQQQ",
+      "prices": [...],
+      "dividends": [...]
     },
     "comparison": {
       "excess_return_pct": 6.7,
       "excess_sharpe": 0.23,
-      "reduced_drawdown_pct": 9.9
+      "reduced_max_drawdown_pct": 9.9
     }
   }
 }
 ```
 
-See `ARCHITECTURE.md` in the repository root for the complete response schema.
-
 ---
 
-### 2. `GET /api/health` (Enhanced)
+### 2. `GET /api/health`
 
-The current `/health` endpoint only returns the orchestrator's status. Enhance it to check all downstream services.
+Enhanced health check that verifies all downstream services.
 
 **Response:**
 
@@ -108,16 +123,45 @@ The current `/health` endpoint only returns the orchestrator's status. Enhance i
 
 ---
 
-## Orchestration Flow
+### 3. `GET /health`
 
-When `/api/backtest` is called, execute these steps in order:
+Basic health check for Docker.
+
+**Response:**
+
+```json
+{
+  "status": "healthy",
+  "service": "orchestrator"
+}
+```
+
+---
+
+## Test Mode
+
+The `use_test_data` flag enables testing with deterministic data:
+
+| Mode | `use_test_data` | Data Source | Use Case |
+|------|-----------------|-------------|----------|
+| Normal | `false` (default) | market-data service (live Yahoo Finance) | Production, real backtests |
+| Test | `true` | test-data-fetcher (static fixtures) | Frontend testing, CI/CD |
+
+**Test data includes:**
+- 20 trading days of AAPL prices (January 2024)
+- A -6% price dip on day 5 (triggers buy_the_dip with -5% threshold)
+- 4 quarterly dividends
+
+---
+
+## Orchestration Flow
 
 ```
 1. VALIDATE request parameters
 
 2. FETCH market data (parallel calls)
-   POST http://market-data:8012/prices
-   POST http://market-data:8012/dividends
+   POST http://market-data:8012/prices    (or test-data-fetcher:8016 if use_test_data)
+   POST http://market-data:8012/dividends (or test-data-fetcher:8016 if use_test_data)
 
 3. GENERATE signals (parallel calls)
    POST http://strategy:8013/signals  (active strategy)
@@ -133,28 +177,35 @@ When `/api/backtest` is called, execute these steps in order:
 6. ASSEMBLE and return final response
 ```
 
-Use `httpx` with `asyncio.gather()` for parallel requests where noted.
-
 ---
 
-## Service URLs (Environment Variables)
+## Project Structure
 
-These are already configured in `docker-compose.yml`:
-
-| Variable | Default Value |
-|----------|---------------|
-| `MARKET_DATA_URL` | `http://market-data:8012` |
-| `STRATEGY_URL` | `http://strategy:8013` |
-| `PORTFOLIO_URL` | `http://portfolio:8014` |
-| `METRICS_URL` | `http://metrics:8015` |
-
-Access them via `os.environ.get("MARKET_DATA_URL")`.
+```
+services/orchestrator/
+├── app/
+│   ├── main.py              # FastAPI application entry point
+│   ├── routes/
+│   │   └── backtest.py      # POST /api/backtest, GET /api/health
+│   ├── schemas/
+│   │   ├── requests.py      # Pydantic request models
+│   │   └── responses.py     # Pydantic response models
+│   └── clients/
+│       ├── base.py          # Base HTTP client with error handling
+│       ├── market_data.py   # Market data service client
+│       ├── strategy.py      # Strategy service client
+│       ├── portfolio.py     # Portfolio service client
+│       └── metrics.py       # Metrics service client
+├── Dockerfile
+├── requirements.txt
+└── INSTRUCTIONS.md          # This file
+```
 
 ---
 
 ## Error Handling
 
-Wrap downstream service calls in try/except. Return errors in this format:
+All errors follow a consistent format:
 
 ```json
 {
@@ -167,37 +218,10 @@ Wrap downstream service calls in try/except. Return errors in this format:
 }
 ```
 
----
-
-## Reference Implementation
-
-See `services/test-data-fetcher/app/main.py` for a working FastAPI service example with proper response formatting.
-
----
-
-## Files to Modify
-
-```
-services/orchestrator/
-├── app/
-│   ├── main.py          # Add routes, CORS already configured
-│   ├── routes/          # Create this folder
-│   │   └── backtest.py  # Main backtest endpoint logic
-│   ├── schemas/         # Create this folder
-│   │   ├── requests.py  # Pydantic models for request validation
-│   │   └── responses.py # Pydantic models for responses
-│   └── clients/         # Create this folder
-│       ├── market_data.py
-│       ├── strategy.py
-│       ├── portfolio.py
-│       └── metrics.py
-└── requirements.txt     # Add any new dependencies
-```
-
----
-
-## Do NOT Modify
-
-- `docker-compose.yml`
-- `Dockerfile` (unless adding system dependencies)
-- Other service folders
+| Error Code | HTTP Status | Description |
+|------------|-------------|-------------|
+| `INVALID_REQUEST` | 400 | Malformed request body |
+| `INVALID_TICKER` | 400 | Ticker symbol not found |
+| `INSUFFICIENT_DATA` | 400 | Not enough price data for analysis |
+| `SERVICE_UNAVAILABLE` | 503 | Downstream service unreachable |
+| `INTERNAL_ERROR` | 500 | Unexpected server error |
