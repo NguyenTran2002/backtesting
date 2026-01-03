@@ -31,7 +31,7 @@ class BuyTheDip(BaseStrategy):
                     action="BUY",
                     price=today.adjusted_close,
                     trigger_details={
-                        "price_change_pct": round(price_change * 100, 2),
+                        "price_change_pct": price_change,
                         "threshold_pct": round(threshold * 100, 2),
                         "previous_close": past.adjusted_close
                     }
