@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from .routes.calculate import router as calculate_router
 
 app = FastAPI(
     title="Metrics Service",
@@ -15,6 +16,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# mount the calculate router
+app.include_router(calculate_router, prefix="", tags=["calculate"])
 
 @app.get("/health")
 async def health_check():

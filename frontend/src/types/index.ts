@@ -24,6 +24,32 @@ export type EndpointStatus =
   | 'error'          // 500 or network error
   | 'wrong-format';  // Response doesn't match expected schema
 
+// Test categories
+export type TestCategory = 'format' | 'correctness' | 'edge-case';
+
+// Individual test result
+export interface TestResult {
+  testId: string;
+  name: string;
+  category: TestCategory;
+  passed: boolean;
+  expected?: string;
+  actual?: string;
+  message?: string;
+  // Raw request/response for detailed inspection
+  rawRequest?: Record<string, unknown>;
+  rawResponse?: unknown;
+}
+
+// Aggregated test results for an endpoint
+export interface EndpointTestResults {
+  passed: number;
+  failed: number;
+  total: number;
+  results: TestResult[];
+  lastRun: Date;
+}
+
 // Endpoint state
 export interface EndpointState {
   status: EndpointStatus;
@@ -31,6 +57,7 @@ export interface EndpointState {
   lastResult?: unknown;
   error?: string;
   responseTime?: number;
+  testResults?: EndpointTestResults;
 }
 
 // Service state

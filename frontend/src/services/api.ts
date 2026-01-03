@@ -4,8 +4,10 @@ import type {
   ServiceStatus,
   EndpointStatus,
   EndpointState,
+  EndpointTestResults,
   ApiResponse
 } from '../types';
+import { runEndpointTests as runTests, getTestSummary } from '../tests';
 
 // Service configurations with new port mappings (8010-8016)
 export const SERVICE_CONFIGS: Record<ServiceName, ServiceConfig> = {
@@ -337,11 +339,15 @@ export async function checkEndpoint(
       };
     }
 
+    // Run comprehensive tests
+    const testResults = await runTests(service, endpointKey, data);
+
     return {
       status: 'working',
       lastChecked: new Date(),
       lastResult: data,
-      responseTime
+      responseTime,
+      testResults
     };
   } catch (error) {
     const responseTime = performance.now() - startTime;
@@ -465,3 +471,37 @@ export function getServiceCompletion(endpoints: Record<string, EndpointState>): 
   const working = endpointKeys.filter(k => endpoints[k].status === 'working').length;
   return Math.round((working / endpointKeys.length) * 100);
 }
+
+// Calculate test pass rate for a service
+export function getServiceTestPassRate(endpoints: Record<string, EndpointState>): {
+  passed: number;
+  total: number;
+  percentage: number;
+} {
+  let totalPassed = 0;
+  let totalTests = 0;
+
+  for (const endpoint of Object.values(endpoints)) {
+    if (endpoint.testResults) {
+      totalPassed += endpoint.testResults.passed;
+      totalTests += endpoint.testResults.total;
+    }
+  }
+
+  return {
+    passed: totalPassed,
+    total: totalTests,
+    percentage: totalTests > 0 ? Math.round((totalPassed / totalTests) * 100) : 0
+  };
+}
+
+// Run tests for a specific endpoint on demand
+export async function runEndpointTestsOnDemand(
+  service: ServiceName,
+  endpointKey: string
+): Promise<EndpointTestResults> {
+  return runTests(service, endpointKey);
+}
+
+// Re-export test summary helper
+export { getTestSummary };

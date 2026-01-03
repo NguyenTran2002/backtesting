@@ -1,0 +1,61 @@
+/* Test Badge Styles */
+.test-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+  min-width: 40px;
+}
+
+.test-badge.pass {
+  background-color: var(--color-success-bg);
+  color: var(--color-success);
+}
+
+.test-badge.partial {
+  background-color: var(--color-warning-bg);
+  color: var(--color-warning);
+}
+
+.test-badge.fail {
+  background-color: var(--color-error-bg);
+  color: var(--color-error);
+}
+
+.test-badge.none {
+  background-color: var(--color-bg-subtle);
+  color: var(--color-text-tertiary);
+  font-weight: 400;
+}
+
+/* Clickable endpoint row */
+.endpoint-row.clickable {
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+
+.endpoint-row.clickable:hover {
+  background-color: var(--color-bg-hover);
+}
+
+/* Dark mode adjustments */
+@media (prefers-color-scheme: dark) {
+  .test-badge.pass {
+    background-color: rgba(34, 139, 34, 0.15);
+  }
+
+  .test-badge.partial {
+    background-color: rgba(218, 165, 32, 0.15);
+  }
+
+  .test-badge.fail {
+    background-color: rgba(205, 92, 92, 0.15);
+  }
+
+  .test-badge.none {
+    background-color: rgba(255, 255, 255, 0.05);
+  }
+}
