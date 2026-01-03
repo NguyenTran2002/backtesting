@@ -196,7 +196,7 @@ services/market-data/
 │   │   └── yahoo.py      # yfinance implementation
 │   └── schemas/          # Pydantic models
 │       └── models.py     # Request/Response schemas
-└── requirements.txt      # Ensure yfinance>=0.2.31 for stability
+└── requirements.txt      # Ensure yfinance>=0.2.54 for stability
 ```
 
 ---

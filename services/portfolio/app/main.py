@@ -1,5 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from .routes.simulate import router as simulate_router  # <--- add this import
+
 
 app = FastAPI(
     title="Portfolio Service",
@@ -14,6 +16,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# mount the simulate router
+app.include_router(simulate_router, prefix="", tags=["simulate"])
 
 
 @app.get("/health")

@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from app.routes import signals
 
 app = FastAPI(
     title="Strategy Service",
@@ -7,6 +8,7 @@ app = FastAPI(
     version="0.1.0"
 )
 
+# CORS Configuration for cross-service communication
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -15,6 +17,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Registering the Strategy routes
+app.include_router(signals.router)
 
 @app.get("/health")
 async def health_check():
