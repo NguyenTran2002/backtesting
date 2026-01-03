@@ -63,19 +63,19 @@ If you need changes to these files, raise it with the team lead first.
 
 ## Service Implementation Status
 
-Each service has an `INSTRUCTIONS.md` file with complete implementation details.
+Each service has an `INSTRUCTIONS.md` file with implementation details.
 
 | Service | Port | Status | Instructions |
 |---------|------|--------|--------------|
-| **orchestrator** | 8011 | Skeleton | [INSTRUCTIONS.md](services/orchestrator/INSTRUCTIONS.md) |
-| **market-data** | 8012 | Skeleton | [INSTRUCTIONS.md](services/market-data/INSTRUCTIONS.md) |
-| **strategy** | 8013 | Skeleton | [INSTRUCTIONS.md](services/strategy/INSTRUCTIONS.md) |
-| **portfolio** | 8014 | Skeleton | [INSTRUCTIONS.md](services/portfolio/INSTRUCTIONS.md) |
-| **metrics** | 8015 | Skeleton | [INSTRUCTIONS.md](services/metrics/INSTRUCTIONS.md) |
+| **orchestrator** | 8011 | Complete | [INSTRUCTIONS.md](services/orchestrator/INSTRUCTIONS.md) |
+| **market-data** | 8012 | Complete | [INSTRUCTIONS.md](services/market-data/INSTRUCTIONS.md) |
+| **strategy** | 8013 | Complete | [INSTRUCTIONS.md](services/strategy/INSTRUCTIONS.md) |
+| **portfolio** | 8014 | Complete | [INSTRUCTIONS.md](services/portfolio/INSTRUCTIONS.md) |
+| **metrics** | 8015 | Complete | [INSTRUCTIONS.md](services/metrics/INSTRUCTIONS.md) |
 | test-data-fetcher | 8016 | Complete | Static fixtures for deterministic testing |
 | frontend | 8010 | Complete | Testing dashboard |
 
-**Skeleton** = Only `/health` endpoint implemented. Read the INSTRUCTIONS.md to see what needs to be built.
+**Complete** = All endpoints implemented and tested.
 
 ---
 
