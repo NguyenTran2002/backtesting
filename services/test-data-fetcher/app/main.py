@@ -1,5 +1,22 @@
 from fastapi import FastAPI, Query, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
+from typing import Optional
+
+
+class PriceRequest(BaseModel):
+    ticker: str
+    market_type: str
+    start_date: str
+    end_date: str
+    frequency: str = "daily"
+
+
+class DividendRequest(BaseModel):
+    ticker: str
+    start_date: str
+    end_date: str
+
 
 app = FastAPI(
     title="Test Data Fetcher Service",
@@ -153,5 +170,73 @@ async def get_sample_backtest_request():
                 "initial_capital": 10000,
                 "reinvest_dividends": True
             }
+        }
+    }
+
+
+def filter_by_date_range(data: list, date_key: str, start_date: str, end_date: str) -> list:
+    """Filter list of dicts by date range."""
+    return [
+        item for item in data
+        if start_date <= item[date_key] <= end_date
+    ]
+
+
+@app.post("/prices")
+async def post_prices(request: PriceRequest):
+    """
+    POST endpoint for price data - mirrors market-data service API.
+    Returns static test data filtered by date range.
+    """
+    ticker_upper = request.ticker.upper()
+
+    if ticker_upper not in STATIC_PRICES:
+        return {
+            "success": False,
+            "error": {
+                "code": "INVALID_TICKER",
+                "message": f"No price data found for ticker '{request.ticker}'",
+                "details": {}
+            }
+        }
+
+    prices = STATIC_PRICES[ticker_upper]
+    filtered_prices = filter_by_date_range(prices, "date", request.start_date, request.end_date)
+
+    return {
+        "success": True,
+        "data": {
+            "ticker": ticker_upper,
+            "frequency": request.frequency,
+            "prices": filtered_prices
+        }
+    }
+
+
+@app.post("/dividends")
+async def post_dividends(request: DividendRequest):
+    """
+    POST endpoint for dividend data - mirrors market-data service API.
+    Returns static test data filtered by date range.
+    """
+    ticker_upper = request.ticker.upper()
+
+    if ticker_upper not in STATIC_DIVIDENDS:
+        return {
+            "success": True,
+            "data": {
+                "ticker": ticker_upper,
+                "dividends": []
+            }
+        }
+
+    dividends = STATIC_DIVIDENDS[ticker_upper]
+    filtered_dividends = filter_by_date_range(dividends, "ex_date", request.start_date, request.end_date)
+
+    return {
+        "success": True,
+        "data": {
+            "ticker": ticker_upper,
+            "dividends": filtered_dividends
         }
     }

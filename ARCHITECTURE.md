@@ -100,9 +100,16 @@ Executes a complete backtest with the active strategy and baseline comparison.
   "baseline_params": {
     "initial_capital": 50000,
     "reinvest_dividends": true
-  }
+  },
+  "use_test_data": false
 }
 ```
+
+**Optional Parameters:**
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `use_test_data` | boolean | `false` | When `true`, uses test-data-fetcher service instead of live market data. Useful for frontend testing with deterministic results. |
 
 **Response Body:**
 
