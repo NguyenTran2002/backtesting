@@ -72,7 +72,7 @@ Each service has an `INSTRUCTIONS.md` file with complete implementation details.
 | **strategy** | 8013 | Skeleton | [INSTRUCTIONS.md](services/strategy/INSTRUCTIONS.md) |
 | **portfolio** | 8014 | Skeleton | [INSTRUCTIONS.md](services/portfolio/INSTRUCTIONS.md) |
 | **metrics** | 8015 | Skeleton | [INSTRUCTIONS.md](services/metrics/INSTRUCTIONS.md) |
-| test-data-fetcher | 8016 | Complete | Reference implementation |
+| test-data-fetcher | 8016 | Complete | Static fixtures for deterministic testing |
 | frontend | 8010 | Complete | Testing dashboard |
 
 **Skeleton** = Only `/health` endpoint implemented. Read the INSTRUCTIONS.md to see what needs to be built.
