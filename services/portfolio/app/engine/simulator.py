@@ -19,32 +19,32 @@ def run_simulation(req: SimulateRequest) -> Dict:
     if not req.price_data:
         raise ValueError("INSUFFICIENT_DATA: price_data must not be empty")
 
-+    # If initial capital is zero or negative, do not execute any trades.
-+    # Return time series arrays (same dates) filled with zeros and an empty trades list.
-+    if float(req.initial_capital) <= 0.0:
-+        ts_dates = [p.date for p in req.price_data]
-+        n = len(ts_dates)
-+        zero_f2 = [0.0 for _ in range(n)]
-+        zero_f6 = [0.0 for _ in range(n)]
-+        time_series = {
-+            "dates": ts_dates,
-+            "portfolio_value": [round(v, 2) for v in zero_f2],
-+            "holdings_value": [round(v, 2) for v in zero_f2],
-+            "cash_balance": [round(v, 2) for v in zero_f2],
-+            "shares_held": [round(v, 6) for v in zero_f6],
-+            "cumulative_invested": [round(v, 2) for v in zero_f2],
-+            "cumulative_dividends": [round(v, 2) for v in zero_f2],
-+        }
-+        final_state = {
-+            "total_shares": 0.0,
-+            "cash_balance": round(float(req.initial_capital), 2),
-+            "holdings_value": 0.0,
-+            "portfolio_value": round(float(req.initial_capital), 2),
-+            "total_invested": 0.0,
-+            "total_dividends_received": 0.0,
-+            "total_transaction_costs": 0.0,
-+        }
-+        return {"time_series": time_series, "trades": [], "final_state": final_state}
+    # If initial capital is zero or negative, do not execute any trades.
+    # Return time series arrays (same dates) filled with zeros and an empty trades list.
+    if float(req.initial_capital) <= 0.0:
+        ts_dates = [p.date for p in req.price_data]
+        n = len(ts_dates)
+        zero_f2 = [0.0 for _ in range(n)]
+        zero_f6 = [0.0 for _ in range(n)]
+        time_series = {
+            "dates": ts_dates,
+            "portfolio_value": [round(v, 2) for v in zero_f2],
+            "holdings_value": [round(v, 2) for v in zero_f2],
+            "cash_balance": [round(v, 2) for v in zero_f2],
+            "shares_held": [round(v, 6) for v in zero_f6],
+            "cumulative_invested": [round(v, 2) for v in zero_f2],
+            "cumulative_dividends": [round(v, 2) for v in zero_f2],
+        }
+        final_state = {
+            "total_shares": 0.0,
+            "cash_balance": round(float(req.initial_capital), 2),
+            "holdings_value": 0.0,
+            "portfolio_value": round(float(req.initial_capital), 2),
+            "total_invested": 0.0,
+            "total_dividends_received": 0.0,
+            "total_transaction_costs": 0.0,
+        }
+       return {"time_series": time_series, "trades": [], "final_state": final_state}
 
     # Build quick lookups
     price_by_date = {p.date: float(p.adjusted_close) for p in req.price_data}
