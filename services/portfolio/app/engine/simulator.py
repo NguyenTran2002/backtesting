@@ -1,21 +1,18 @@
 from typing import Dict, List
 from ..schemas.models import SimulateRequest
 
-def run_simulation(req: SimulateRequest) -> Dict:
-    """
-    Run the portfolio simulation.
-    -try
+#    Run the portfolio simulation.
+#    -try
+#
+#    - Expects req.price_data to be ordered by date (ascending).
+#    - transaction_cost_pct and cash_interest_rate_pct are treated as fractions (0.01 == 1%).
+#      This function also accepts percent inputs (e.g. 1 or 1.0 -> treated as 1%).
+#    - Raises ValueError on invalid input (caller/router should convert to HTTP error).
+#    - Returns a dict shaped like SimulateData (time_series, trades, final_state).
+#
 
-    - Expects req.price_data to be ordered by date (ascending).
-    - transaction_cost_pct and cash_interest_rate_pct are treated as fractions (0.01 == 1%).
-      This function also accepts percent inputs (e.g. 1 or 1.0 -> treated as 1%).
-    - Raises ValueError on invalid input (caller/router should convert to HTTP error).
-    - Returns a dict shaped like SimulateData (time_series, trades, final_state).
-    """
-    if not req.price_data:
-        raise ValueError("INSUFFICIENT_DATA: price_data must not be empty")
-    
-    # ...existing code...
+# ...existing imports...
+def run_simulation(req: SimulateRequest) -> Dict:
     if not req.price_data:
         raise ValueError("INSUFFICIENT_DATA: price_data must not be empty")
 
@@ -24,16 +21,16 @@ def run_simulation(req: SimulateRequest) -> Dict:
     if float(req.initial_capital) <= 0.0:
         ts_dates = [p.date for p in req.price_data]
         n = len(ts_dates)
-        zero_f2 = [0.0 for _ in range(n)]
-        zero_f6 = [0.0 for _ in range(n)]
+        zero_f2 = [0.0] * n
+        zero_f6 = [0.0] * n
         time_series = {
             "dates": ts_dates,
-            "portfolio_value": [round(v, 2) for v in zero_f2],
-            "holdings_value": [round(v, 2) for v in zero_f2],
-            "cash_balance": [round(v, 2) for v in zero_f2],
-            "shares_held": [round(v, 6) for v in zero_f6],
-            "cumulative_invested": [round(v, 2) for v in zero_f2],
-            "cumulative_dividends": [round(v, 2) for v in zero_f2],
+            "portfolio_value": [0.0] * n,
+            "holdings_value": [0.0] * n,
+            "cash_balance": [0.0] * n,
+            "shares_held": [0.0] * n,
+            "cumulative_invested": [0.0] * n,
+            "cumulative_dividends": [0.0] * n,
         }
         final_state = {
             "total_shares": 0.0,
@@ -44,10 +41,11 @@ def run_simulation(req: SimulateRequest) -> Dict:
             "total_dividends_received": 0.0,
             "total_transaction_costs": 0.0,
         }
-       return {"time_series": time_series, "trades": [], "final_state": final_state}
+        return {"time_series": time_series, "trades": [], "final_state": final_state}
 
     # Build quick lookups
     price_by_date = {p.date: float(p.adjusted_close) for p in req.price_data}
+    # ...rest of function...
     # signals: map date -> list of signals (handle multiple signals same date)
     signal_by_date: Dict[str, List] = {}
     for s in req.signals or []:
