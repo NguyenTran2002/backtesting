@@ -4,14 +4,47 @@ from ..schemas.models import SimulateRequest
 def run_simulation(req: SimulateRequest) -> Dict:
     """
     Run the portfolio simulation.
+    -try
 
     - Expects req.price_data to be ordered by date (ascending).
     - transaction_cost_pct and cash_interest_rate_pct are treated as fractions (0.01 == 1%).
+      This function also accepts percent inputs (e.g. 1 or 1.0 -> treated as 1%).
     - Raises ValueError on invalid input (caller/router should convert to HTTP error).
     - Returns a dict shaped like SimulateData (time_series, trades, final_state).
     """
     if not req.price_data:
         raise ValueError("INSUFFICIENT_DATA: price_data must not be empty")
+    
+    # ...existing code...
+    if not req.price_data:
+        raise ValueError("INSUFFICIENT_DATA: price_data must not be empty")
+
++    # If initial capital is zero or negative, do not execute any trades.
++    # Return time series arrays (same dates) filled with zeros and an empty trades list.
++    if float(req.initial_capital) <= 0.0:
++        ts_dates = [p.date for p in req.price_data]
++        n = len(ts_dates)
++        zero_f2 = [0.0 for _ in range(n)]
++        zero_f6 = [0.0 for _ in range(n)]
++        time_series = {
++            "dates": ts_dates,
++            "portfolio_value": [round(v, 2) for v in zero_f2],
++            "holdings_value": [round(v, 2) for v in zero_f2],
++            "cash_balance": [round(v, 2) for v in zero_f2],
++            "shares_held": [round(v, 6) for v in zero_f6],
++            "cumulative_invested": [round(v, 2) for v in zero_f2],
++            "cumulative_dividends": [round(v, 2) for v in zero_f2],
++        }
++        final_state = {
++            "total_shares": 0.0,
++            "cash_balance": round(float(req.initial_capital), 2),
++            "holdings_value": 0.0,
++            "portfolio_value": round(float(req.initial_capital), 2),
++            "total_invested": 0.0,
++            "total_dividends_received": 0.0,
++            "total_transaction_costs": 0.0,
++        }
++        return {"time_series": time_series, "trades": [], "final_state": final_state}
 
     # Build quick lookups
     price_by_date = {p.date: float(p.adjusted_close) for p in req.price_data}
@@ -39,7 +72,6 @@ def run_simulation(req: SimulateRequest) -> Dict:
 
     trades: List[Dict] = []
 
-    # Precompute daily cash interest factor if provided (we compute per day inside loop to allow zero)
     for day in req.price_data:
         date = day.date
         price = float(day.adjusted_close)
@@ -56,7 +88,6 @@ def run_simulation(req: SimulateRequest) -> Dict:
                     new_shares = dividend_payment / price
                     shares += new_shares
                 else:
-                    # if price invalid, treat as cash
                     cash += dividend_payment
             else:
                 cash += dividend_payment
@@ -66,17 +97,23 @@ def run_simulation(req: SimulateRequest) -> Dict:
         for sig in signals_today:
             if (sig.action or "").upper() == "BUY":
                 invest_amt = float(req.investment_per_trade)
-                # no partial fills: require full investment amount available
+                # normalize transaction cost input: accept either fraction (0.01) or percent (1.0)
+                pct = float(req.transaction_cost_pct)
+                if pct > 1.0:
+                    pct = pct / 100.0
+
+                # OPTION A behavior: investment_per_trade is the total cash taken from account;
+                # transaction cost is deducted from that amount, so shares are bought with net_invest.
                 if cash >= invest_amt and invest_amt > 0 and price > 0:
-                    tx_cost = invest_amt * float(req.transaction_cost_pct)
+                    tx_cost = invest_amt * pct
                     net_invest = invest_amt - tx_cost
                     if net_invest <= 0:
-                        # nothing to buy (transaction cost consumes all), skip
+                        # nothing to buy (fee consumes all), skip
                         continue
 
                     shares_bought = net_invest / price
                     shares += shares_bought
-                    cash -= invest_amt
+                    cash -= invest_amt                        # full amount removed from cash
                     total_invested += invest_amt
                     total_transaction_costs += tx_cost
 
@@ -89,11 +126,13 @@ def run_simulation(req: SimulateRequest) -> Dict:
                         "amount": round(invest_amt, 2),
                         "transaction_cost": round(tx_cost, 2),
                     })
-                # else skip due to insufficient cash
+                # else skip due to insufficient cash or invalid price
 
         # 3) Cash interest (daily compound) if provided as annual fraction
         if req.cash_interest_rate_pct and float(req.cash_interest_rate_pct) > 0:
             annual_rate = float(req.cash_interest_rate_pct)
+            if annual_rate > 1.0:
+                annual_rate = annual_rate / 100.0
             # assume 252 trading days
             daily_rate = (1.0 + annual_rate) ** (1.0 / 252.0) - 1.0
             cash *= (1.0 + daily_rate)
